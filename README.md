@@ -5,6 +5,9 @@
 <p>A userscript to provide two page-scrolling buttons on right margin enabling a one-click page scroll to the top or bottom.</p>
 <p>In addition, a mouse-over or middle-click of the buttons will scroll the page up or downwards at a selectable speed.</p>
 <br>
+<img alt="Buttons" src="https://raw.githubusercontent.com/s-marty/SmartScroll/master/images/buttons.png" style="width:315px;height:188px;margin-left:110px">
+<br>
+<br>
 <p>Smart Scroll comes with a settings modal</p>
 
 <img alt="Settings Modal" src="https://raw.githubusercontent.com/s-marty/SmartScroll/master/images/Settings.png">
