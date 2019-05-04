@@ -1045,4 +1045,3 @@ if (window.self == window.top) {
   }
 }
 }());
-// xhtml https://www.w3.org/People/mimasa/test/xhtml/media-types/results
