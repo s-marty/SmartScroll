@@ -1,8 +1,9 @@
 // ==UserScript==
-// @version         18.12.25
+// @version         19.5.4
 // @name            Smart Scroll
 // @description     Provides buttons to scroll web pages up and down
 // @license         MIT
+// @author          S-Marty
 // @compatible      firefox
 // @compatible      chrome
 // @namespace       https://github.com/s-marty/SmartScroll
@@ -233,6 +234,7 @@ var buttons = {
   getScrollTop: function() {
 
     if (typeof pageYOffset != 'undefined') {
+      buttons._x = pageXOffset;
       return pageYOffset;
     }
 
@@ -267,10 +269,10 @@ var buttons = {
           y = start - (progress * start);
           if (y < 0) y = 0;
           if (progress < 1) {
-            window.scrollTo(0, y);
+            window.scrollTo(buttons._x, y);
           }
           else {
-            window.scrollTo(0, 0);
+            window.scrollTo(buttons._x, 0);
             buttons.count_accru += start;
             buttons.getVideo();
           }
@@ -294,10 +296,10 @@ var buttons = {
           y = (progress * maxscroll) + ((1 - progress) * start);
           if (y > maxscroll) y = maxscroll;
           if (progress < 1) {
-            window.scrollTo(0, y);
+            window.scrollTo(buttons._x, y);
           }
           else {
-            window.scrollTo(0, maxscroll + 2);
+            window.scrollTo(buttons._x, maxscroll + 2);
             buttons.count_accru += maxscroll - start;
             buttons.getVideo();
           }
@@ -315,7 +317,7 @@ var buttons = {
     }
     buttons.scrolled = buttons.getScrollTop();
     if (buttons.creep && buttons.scrolled > 0) {
-      window.scrollTo(0, buttons.scrolled - buttons.step);
+      window.scrollTo(buttons._x, buttons.scrolled - buttons.step);
       buttons.count_accru += buttons.step;
     }
     else buttons.killCreeper()
@@ -330,7 +332,7 @@ var buttons = {
     }
     buttons.scrolled = buttons.getScrollTop();
     if (buttons.creep && buttons.scrollable > buttons.scrolled) {
-      window.scrollTo(0, buttons.scrolled + buttons.step);
+      window.scrollTo(buttons._x, buttons.scrolled + buttons.step);
       buttons.count_accru += buttons.step;
     }
     else buttons.killCreeper()
@@ -471,12 +473,12 @@ var buttons = {
       var plus_sel = '';
       var minus_sel = '';
       var crawl_sel = '';
-      let host = window.location.hostname;
-      let m = host.match(/^([\w\-]*\.)?([\w\-]+\.((\w{3,4}$)|(\w{2}\.\w{2}$)))/i);
+      let hostname = window.location.hostname;
+      let m = hostname.match(/^([\w\-]*\.)?([\w\-]+\.((\w{3,4}$)|(\w{2}\.\w{2}$)))/i);
 
       if (m != null && m.length > 2){
         if (typeof m[1] == 'undefined') {m[1] = '';}
-        host = m[1] + m[2];
+        hostname = m[1] + m[2];
       }
 
       let hex = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'],
@@ -561,10 +563,10 @@ var buttons = {
 
       for (n = 0; n < ignored.length; n++) {
         if (ignored[n].length < 5) continue;
-        addable = addable || host == ignored[n];
+        addable = addable || hostname == ignored[n];
         ignoredHTML += '<span class="ignores"><button style="padding:0px 3px 1px;margin-right:6px;background-color:#ff3333;color:#fff;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px" onclick="document.forms[\'sssettings\'].remove.value+=\''+ignored[n]+',\';this.disabled=\'disabled\'" title="Mark '+ignored[n]+' for deletion from this list">x</button><span>'+ignored[n]+'</span></span><br />';
       }
-      addable = addable ? '' : ('<span class="addable"><button style="padding:0px 3px 1px;margin-right:6px;background-color:#33ff33;color:#000;font-weight:bold;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px" onclick="document.forms[\'sssettings\'].add.value+=\''+host+'\';this.disabled=\'disabled\'" title="Mark '+host+' for addition to this list">+</button><span>'+host+'</span></span><br />');
+      addable = addable ? '' : ('<span class="addable"><button style="padding:0px 3px 1px;margin-right:6px;background-color:#33ff33;color:#000;font-weight:bold;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px" onclick="document.forms[\'sssettings\'].add.value+=\''+hostname+'\';this.disabled=\'disabled\'" title="Mark '+hostname+' for addition to this list">+</button><span>'+hostname+'</span></span><br />');
 
       html = '<div id="'+id+'" style="width:500px;height:400px;margin:auto auto;border-radius:12px 54px 12px 100px;-webkit-border-radius:12px 54px 12px 100px;-moz-border-radius:12px 54px 12px 100px;border:3px solid #CCC;">'+
              '  <div style="width:500px;height:50px;background-color:#000;border-radius:12px 50px 0px 0px;-webkit-border-radius:12px 50px 0px 0px;-moz-border-radius:12px 50px 0px 0px;">'+
@@ -1009,7 +1011,8 @@ var buttons = {
   dn_ctn: null,
   creep: !1,
   step: 5,
-  GM: null
+  GM: null,
+  _x: 0
 };
 
 var _once = 0;
@@ -1042,3 +1045,4 @@ if (window.self == window.top) {
   }
 }
 }());
+// xhtml https://www.w3.org/People/mimasa/test/xhtml/media-types/results
