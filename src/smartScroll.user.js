@@ -1,5 +1,5 @@
 // ==UserScript==
-// @version         19.5.4
+// @version         19.11.11
 // @name            Smart Scroll
 // @description     Provides buttons to scroll web pages up and down
 // @license         MIT
@@ -21,6 +21,12 @@
 // @grant           GM_setValue
 // @noframes
 // ==/UserScript==
+
+/* greasyfork.org jshint syntax checking hacks */
+/* jshint asi: true */
+/* jshint boss: true */
+/* jshint esversion: 6 */
+/* jshint loopfunc: true */
 
 /** ****************** Features ******************
 *** Able to leap tall pages in a single click
@@ -66,37 +72,37 @@ var buttons = {
       this.body.appendChild(this.dn_ctn);
 
       if (this.user.settings.crawl_trigger == 'middleclick') {
-        this.up_ctn.addEventListener('mousedown', function(e){ if(e.which==2) {buttons.creepUp(1)} }, false);
-        this.up_ctn.addEventListener('mouseup', function(e){ if(e.which==2) {buttons.creep = !1} }, false);
-        this.dn_ctn.addEventListener('mousedown', function(e){ if(e.which==2) {buttons.creepDn(1)} }, false);
-        this.dn_ctn.addEventListener('mouseup', function(e){ if(e.which==2) {buttons.creep = !1} }, false);
+        this.up_ctn.addEventListener('mousedown', function(e) { if(e.which==2) {buttons.creepUp(1)} }, false);
+        this.up_ctn.addEventListener('mouseup', function(e) { if(e.which==2) {buttons.creep = !1} }, false);
+        this.dn_ctn.addEventListener('mousedown', function(e) { if(e.which==2) {buttons.creepDn(1)} }, false);
+        this.dn_ctn.addEventListener('mouseup', function(e) { if(e.which==2) {buttons.creep = !1} }, false);
       }
       else {
-        this.up_ctn.addEventListener('mouseover', function(e){ buttons.creepUp(1) }, false);
-        this.up_ctn.addEventListener('mouseout', function(e){ buttons.creep = !1 }, false);
-        this.dn_ctn.addEventListener('mouseover', function(e){ buttons.creepDn(1) }, false);
-        this.dn_ctn.addEventListener('mouseout', function(e){ buttons.creep = !1 }, false);
+        this.up_ctn.addEventListener('mouseover', function(e) { buttons.creepUp(1) }, false);
+        this.up_ctn.addEventListener('mouseout', function(e) { buttons.creep = !1 }, false);
+        this.dn_ctn.addEventListener('mouseover', function(e) { buttons.creepDn(1) }, false);
+        this.dn_ctn.addEventListener('mouseout', function(e) { buttons.creep = !1 }, false);
       }
 
-      this.up_ctn.addEventListener('dblclick', function(e){ if(e.which===1) {buttons.smartScroll_Settings(e)} }, false);
-      this.dn_ctn.addEventListener('dblclick', function(e){ if(e.which===1) {buttons.smartScroll_Settings(e)} }, false);
-      this.up_ctn.addEventListener('click', function(e){ if(e.which===1) {buttons.scrollToTop()} }, false);
-      this.dn_ctn.addEventListener('click', function(e){ if(e.which===1) {buttons.scrollToBottom()} }, false);
+      this.up_ctn.addEventListener('dblclick', function(e) { if(e.which===1) {buttons.smartScroll_Settings(e)} }, false);
+      this.dn_ctn.addEventListener('dblclick', function(e) { if(e.which===1) {buttons.smartScroll_Settings(e)} }, false);
+      this.up_ctn.addEventListener('click', function(e) { if(e.which===1) {buttons.scrollToTop()} }, false);
+      this.dn_ctn.addEventListener('click', function(e) { if(e.which===1) {buttons.scrollToBottom()} }, false);
 
-      if (root != null && this.user.settings.bottomless_pages) {
+      if (root !== null && this.user.settings.bottomless_pages) {
         this.resize = document.createElement("iframe");
         this.resize.setAttribute("name","resize_frame");
         this.resize.setAttribute("tabindex","-1");
         this.resize.className = "resize_frame";
         root.appendChild(this.resize);
-        this.resize.contentWindow.addEventListener('resize', function(e){ buttons.getDocumentHeight(e) }, false);
+        this.resize.contentWindow.addEventListener('resize', function(e) { buttons.getDocumentHeight(e) }, false);
       }
 
       window.addEventListener('scroll', buttons.onScroll, {passive : true});
       window.addEventListener('resize', buttons.onResize, false);
       this.body.addEventListener('mouseleave', buttons.saveAccrued, false);
-      window.addEventListener('beforeunload', function(e){ buttons.settings_close('unload')}, false);
-      document.addEventListener('readystatechange', function(e){ if(document.readyState === "complete") { buttons.getDocumentHeight(e)} }, false);
+      window.addEventListener('beforeunload', function(e) { buttons.settings_close('unload')}, false);
+      document.addEventListener('readystatechange', function(e) { if(document.readyState === "complete") { buttons.getDocumentHeight(e)} }, false);
 
       if (this.user.settings.dimButtons) {
         setTimeout(buttons.fadeOut, 3000);
@@ -419,7 +425,7 @@ var buttons = {
   },
   killCreeper: function() {
 
-    if (this.creeper != null) {
+    if (this.creeper !== null) {
       clearInterval(this.creeper);
       this.creeper = null;
     }
@@ -464,7 +470,7 @@ var buttons = {
 
     let modal = document.querySelector(".smartScroll_Settings"), form;
 
-    if (! buttons.settings_id && modal == null) {
+    if (! buttons.settings_id && modal === null) {
       buttons.allowScroll = false;
       buttons.killCreeper();
 
@@ -476,7 +482,7 @@ var buttons = {
       let hostname = window.location.hostname;
       let m = hostname.match(/^([\w\-]*\.)?([\w\-]+\.((\w{3,4}$)|(\w{2}\.\w{2}$)))/i);
 
-      if (m != null && m.length > 2){
+      if (m !== null && m.length > 2) {
         if (typeof m[1] == 'undefined') {m[1] = '';}
         hostname = m[1] + m[2];
       }
@@ -623,15 +629,15 @@ var buttons = {
       div.style = 'width:100%;height:100%;margin:0;padding:0;position:fixed;top:0px;left:0px;background-color: rgba(0, 0, 0, 0.7);z-index:84000;';
       div.innerHTML = html;
         /* Some (unmentionable large) sites remove settings modal as soon as it is appended */
-      buttons.body.removeChild=function(){return div2}
-      buttons.body.replaceChild=function(){return div2}
+      buttons.body.removeChild=function() {return div2}
+      buttons.body.replaceChild=function() {return div2}
       if (e && e == 'removed') {
           buttons.body.innerHTML += div.outerHTML
       }
       else {
         buttons.body.appendChild(div);
-        setTimeout(function(){
-          if (document.querySelector(".smartScroll_Settings") == null) {
+        setTimeout(function() {
+          if (document.querySelector(".smartScroll_Settings") === null) {
             buttons.settings_id = "";
             buttons.smartScroll_Settings('removed');
           }
@@ -639,20 +645,20 @@ var buttons = {
       }
       buttons.settings_id = id;
       form = document.querySelector('form#'+id+'_settings_form');
-      form.querySelector('#'+id+'_settings_close').addEventListener('click', function(e){ buttons.settings_close() }, false);
-      form.querySelector('#'+id+'_settings_donate').addEventListener('click', function(e){ buttons.settings_donate() }, false);
-      form.querySelector('#'+id+'_settings_save').addEventListener('click', function(e){ buttons.onSettingsSave() }, false);
-      form.querySelector('#'+id+'_settings_save').addEventListener('change', function(e){ buttons.onSettingsSave() }, false);
-      form.querySelector('#position1').addEventListener('change', function(e){ buttons.updateButtonCss() }, false);
-      form.querySelector('#position2').addEventListener('change', function(e){ buttons.updateButtonCss() }, false);
-      form.querySelector('#position3').addEventListener('change', function(e){ buttons.updateButtonCss() }, false);
+      form.querySelector('#'+id+'_settings_close').addEventListener('click', function(e) { buttons.settings_close() }, false);
+      form.querySelector('#'+id+'_settings_donate').addEventListener('click', function(e) { buttons.settings_donate() }, false);
+      form.querySelector('#'+id+'_settings_save').addEventListener('click', function(e) { buttons.onSettingsSave() }, false);
+      form.querySelector('#'+id+'_settings_save').addEventListener('change', function(e) { buttons.onSettingsSave() }, false);
+      form.querySelector('#position1').addEventListener('change', function(e) { buttons.updateButtonCss() }, false);
+      form.querySelector('#position2').addEventListener('change', function(e) { buttons.updateButtonCss() }, false);
+      form.querySelector('#position3').addEventListener('change', function(e) { buttons.updateButtonCss() }, false);
 
       let options1 = form.top_plus.options;
       let options2 = form.bot_minus.options;
 
       for (i = 0;i < options1.length; i++) {
-        options1[i].addEventListener('mouseup', function(e){ buttons.updateButtonCss(e) }, false);
-        options2[i].addEventListener('mouseup', function(e){ buttons.updateButtonCss(e) }, false);
+        options1[i].addEventListener('mouseup', function(e) { buttons.updateButtonCss(e) }, false);
+        options2[i].addEventListener('mouseup', function(e) { buttons.updateButtonCss(e) }, false);
       };
 
     }
@@ -672,7 +678,7 @@ var buttons = {
         ignoreUpdated = false,
         refreshNeeded = false;
 
-    if (form.querySelector('input[name="'+buttons.settings_id+'"]') != null) {
+    if (form.querySelector('input[name="'+buttons.settings_id+'"]') !== null) {
       for (i = 0; i < inputs.length; i++) {
         val = null;
         input = inputs[i];
@@ -756,7 +762,7 @@ var buttons = {
 
     let modal = document.querySelector(".smartScroll_Settings");
 
-    if (modal != null) {
+    if (modal !== null) {
       modal.remove();
     }
     buttons.settings_id = "";
@@ -769,7 +775,7 @@ var buttons = {
   },
   saveAccrued: function(e) {
 
-    if (buttons.count_accru > 1000){
+    if (buttons.count_accru > 1000) {
       buttons.initSettings({name: "count"});
     }
 
@@ -851,7 +857,15 @@ var buttons = {
     btn_css += '.sssettings span button:hover:enabled {line-height: 1.4 !important; width: 10px !important;} .sssettings .ignores button[disabled] + span { opacity:0.5;} .sssettings .addable button + span { opacity:0.5;} .sssettings .addable button[disabled] + span { opacity:1;}';
 
     if (settings.bottomless_pages) {
-      btn_css += 'iframe.resize_frame {position: absolute; display: block ;top: 0; bottom: 0; left: 0; height: 100%; opacity: 0; z-index: 0; width: 0; border: 0; background-color: transparent;} body {position:relative !important;} body.isfullscreen {position:initial !important;}';
+      btn_css += 'iframe.resize_frame {position: absolute; display: block ;top: 0; bottom: 0; left: 0; height: 100%; opacity: 0; z-index: 0; width: 0; border: 0; background-color: transparent;}';
+      if ('contentType' in document) { // Firefox
+        if (document.contentType.indexOf("image") ==-1) {
+          btn_css += 'body {position:relative !important;} body.isfullscreen {position:initial !important;}';
+        }
+      }
+      else {
+        btn_css += 'body {position:relative !important;} body.isfullscreen {position:initial !important;}';
+      }
     }
 
     return btn_css;
@@ -859,7 +873,7 @@ var buttons = {
   },
   scrolledUpdate: function(e) {
 
-    if (buttons.count_accru > 1000 || e === true){
+    if (buttons.count_accru > 1000 || e === true) {
       buttons.initSettings({name: "count"});
     }
     window.setTimeout(buttons.scrolledUpdate, 120000);
@@ -1028,7 +1042,7 @@ if (window.self == window.top) {
     /* Special case sites */
     case host.indexOf('youtube') !=-1 :
       buttons.hideOnFullScreen();
-      window.addEventListener("yt-navigate-finish", function(e){ buttons.reLoadStart(e) }, false);
+      window.addEventListener("yt-navigate-finish", function(e) { buttons.reLoadStart(e) }, false);
       /* body remains 0 height propter full-screen styling */
       if (root = document.querySelector("ytd-app #content")) {
         buttons.init();
